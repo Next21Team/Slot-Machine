@@ -1,0 +1,9 @@
+[en]
+ALREADY_PLAYING = You are already playing on one slot machine!
+WIN_MONEY = ^1You won ^4%d$^1!
+NOT_ENOUGH_MONEY = ^1You don't have enough money!
+
+[ru]
+ALREADY_PLAYING = Вы уже играете на одном автомате!
+WIN_MONEY = ^1Вы выиграли ^4%d$^1!
+NOT_ENOUGH_MONEY = ^1У вас недостаточно денег!
