@@ -1,7 +1,6 @@
 $modelname "slot_machine.mdl"
 $cd ".\"
 $cdtexture "textures"
-$scale 32.0
 $cliptotextures
 
 $flags 512
@@ -12,6 +11,8 @@ $cbox 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
 $eyeposition 0.000000 0.000000 0.000000
 
 $hbox 0 "root" -16.870000 0.000000 -10.040000 16.870000 74.930000 19.280000
+
+$scale 32.0
 
 $body "ref" "bodies/ref"
 $body "reels" "bodies/reels"
