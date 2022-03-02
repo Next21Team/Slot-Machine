@@ -1,15 +1,18 @@
 #include <amxmodx>
 #include <amxmisc>
 #include <fakemeta>
+#include <hamsandwich>
 #include <json>
 #include <reapi>
 #include <xs>
 
 new const PLUGIN[] =    "Slot Machine"
-new const VERSION[] =   "0.1"
+new const VERSION[] =   "0.2"
 new const AUTHOR[] =    "Psycrow"
 
 new const MODEL_SLOTMACHINE[] = "models/next21_crimetown/slot_machine.mdl"
+
+new const CLASSNAME_BASE[] = "info_target"
 new const CLASSNAME_SLOTMACHINE[] = "slot_machine"
 
 new const SOUND_SLOTMACHINE_ROLL[] = "next21_crimetown/slot_machine_roll.wav"
@@ -47,7 +50,7 @@ public plugin_init()
 
     RegisterHookChain(RG_CBasePlayer_Spawn, "CBasePlayer_Spawn_Post", true)
     RegisterHookChain(RG_CBasePlayer_Killed, "CBasePlayer_Killed_Pre", false)
-    RegisterHookChain(RG_CBasePlayer_ImpulseCommands, "CBasePlayer_ImpulseCommands_Pre", false)
+    RegisterHam(Ham_ObjectCaps, CLASSNAME_BASE, "CBase_ObjectCaps_Pre", false)
 
     AddMenuItem("Slot Machine Menu", "slot_machine", ADMIN_CFG, PLUGIN)
     register_clcmd("slot_machine", "clcmd_slot_machine", ADMIN_CFG, "- displays slot machine menu")
@@ -81,19 +84,15 @@ public CBasePlayer_Killed_Pre(iPlayer)
     reset_using_machine(iPlayer)
 }
 
-public CBasePlayer_ImpulseCommands_Pre(iPlayer)
+public CBase_ObjectCaps_Pre(iEnt)
 {
-    if (get_entvar(iPlayer, var_button) & get_member(iPlayer, m_afButtonPressed) & IN_USE)
+    if (FClassnameIs(iEnt, CLASSNAME_SLOTMACHINE))
     {
-        new iEnt = get_target_machine(iPlayer)
-        if (iEnt != NULLENT)
-        {
-            spin(iPlayer, iEnt)
-            return HC_SUPERCEDE
-        }
+        SetHamReturnInteger(FCAP_IMPULSE_USE)
+        return HAM_OVERRIDE
     }
 
-    return HC_CONTINUE
+    return HAM_IGNORED
 }
 
 public clcmd_slot_machine(iPlayer, iLevel, iCid)
@@ -151,7 +150,7 @@ public machine_menu_handler(iPlayer, iMenu, iItem)
 
 create_machine(const Float:vOrigin[3], const Float:vAngles[3])
 {
-    new iEnt = rg_create_entity("info_target", true)
+    new iEnt = rg_create_entity(CLASSNAME_BASE, true)
     if (is_nullent(iEnt))
         return NULLENT
 
@@ -173,6 +172,7 @@ create_machine(const Float:vOrigin[3], const Float:vAngles[3])
     set_entvar(iEnt, var_classname, CLASSNAME_SLOTMACHINE)
 
     SetThink(iEnt, "machine_think")
+    SetUse(iEnt, "machine_use")
 
     return iEnt
 }
@@ -201,6 +201,28 @@ public machine_think(iEnt)
             set_entvar(iEnt, var_sequence, SEQ_IDLE)
         }
     }
+}
+
+public machine_use(iEnt, iActivator, iCaller, USE_TYPE:useType, Float:fValue)
+{
+    if (is_nullent(iActivator))
+        return HC_CONTINUE
+
+    if (!ExecuteHam(Ham_IsPlayer, iActivator))
+        return HC_CONTINUE
+
+    new Float:vUserDirection[3], Float:vMachineDirection[3]
+
+    get_entvar(iActivator, var_v_angle, vUserDirection)
+    angle_vector(vUserDirection, ANGLEVECTOR_FORWARD, vUserDirection)
+
+    get_entvar(iEnt, var_angles, vMachineDirection)
+    angle_vector(vMachineDirection, ANGLEVECTOR_FORWARD, vMachineDirection)
+
+    if (-1.0 <= xs_vec_dot(vUserDirection, vMachineDirection) <= -0.8)
+        spin(iActivator, iEnt)
+
+    return HC_CONTINUE
 }
 
 machine_calculate_prize(iEnt)
@@ -290,26 +312,6 @@ roll_slots(iEnt)
     set_entvar(iEnt, var_nextthink, fGameTime + SPIN_TIME)
 
     emit_sound(iEnt, CHAN_STATIC, SOUND_SLOTMACHINE_ROLL, 1.0, ATTN_IDLE, 0, PITCH_NORM)
-}
-
-get_target_machine(iPlayer)
-{
-    static iEnt, iBody, Float:vUserDirection[3], Float:vMachineDirection[3]
-    get_user_aiming(iPlayer, iEnt, iBody)
-
-    if (!FClassnameIs(iEnt, CLASSNAME_SLOTMACHINE))
-        return NULLENT
-
-    get_entvar(iPlayer, var_v_angle, vUserDirection)
-    angle_vector(vUserDirection, ANGLEVECTOR_FORWARD, vUserDirection)
-
-    get_entvar(iEnt, var_angles, vMachineDirection)
-    angle_vector(vMachineDirection, ANGLEVECTOR_FORWARD, vMachineDirection)
-
-    if (-1.0 <= xs_vec_dot(vUserDirection, vMachineDirection) <= -0.8)
-        return iEnt
-
-    return NULLENT
 }
 
 reset_using_machine(iPlayer)
