@@ -24,6 +24,7 @@ studio "bodies/row_1"
 studio "bodies/row_2"
 studio "bodies/row_3"
 studio "bodies/row_d"
+studio "bodies/row_d_alt"
 }
 
 $texrendermode "row.bmp" "additive" 

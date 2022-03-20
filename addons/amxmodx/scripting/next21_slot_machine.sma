@@ -7,7 +7,7 @@
 #include <xs>
 
 new const PLUGIN[] =    "Slot Machine"
-new const VERSION[] =   "0.2"
+new const VERSION[] =   "0.3"
 new const AUTHOR[] =    "Psycrow"
 
 new const MODEL_SLOTMACHINE[] = "models/next21_crimetown/slot_machine.mdl"
@@ -269,6 +269,18 @@ machine_calculate_prize(iEnt)
         if (iPrize > iTotal)
         {
             set_entvar(iEnt, var_body, g_iReelsNum + 1)
+            iTotal = iPrize
+        }
+    }
+
+    // Check matches along the secondary diagonal
+    for (i = 1; i < g_iReelsNum && s[i][g_iReelsNum-1-i] == s[i-1][g_iReelsNum-i]; i++) {}
+    if (i == g_iReelsNum)
+    {
+        iPrize = s[0][g_iReelsNum - 1]
+        if (iPrize > iTotal)
+        {
+            set_entvar(iEnt, var_body, g_iReelsNum + 2)
             iTotal = iPrize
         }
     }

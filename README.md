@@ -6,7 +6,7 @@ _**English** | [Русский](README.ru.md)_
 
 AMX Mod X plugin for Counter-Strike.
 
-The plugin allows you to place slot machines on the map and play them. The player places a bet and waits for a winning combination of symbols to appear. A victory is counted when a whole row or main diagonal is filled with the same symbols. There is an API for adding your own prizes and a tool for customizing the slot machine model.
+The plugin allows you to place slot machines on the map and play them. The player places a bet and waits for a winning combination of symbols to appear. A victory is counted when a whole row or diagonal is filled with the same symbols. There is an API for adding your own prizes and a tool for customizing the slot machine model.
 
 ## Commands
 * `slot_machine` — menu for placing slot machines on the map.
