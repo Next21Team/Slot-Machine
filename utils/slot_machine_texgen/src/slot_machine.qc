@@ -27,7 +27,7 @@ studio "bodies/row_d"
 studio "bodies/row_d_alt"
 }
 
-$texrendermode "row.bmp" "additive" 
+$texrendermode "row.bmp" "additive"
 
 $controller 0 "reel1" XR 0.000000 179.296875
 $controller 1 "reel2" XR 0.000000 179.296875

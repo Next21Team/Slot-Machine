@@ -46,7 +46,7 @@ def gen_symbol_img(img, d):
     w, h = img.size
     s = min(w, h)
     x, y = (w - s) // 2, (h - s) // 2
-    return img.crop((x, y, x + s, y + s)).resize((d, d), Image.ANTIALIAS)
+    return img.crop((x, y, x + s, y + s)).resize((d, d), Image.LANCZOS)
 
 
 def gen_reel_img(symbols):
@@ -119,7 +119,7 @@ def draw_prizes(img, symbols, prizes_data):
         pd = prizes_data[idx]
         text, color, shadow_color = pd['text'], tuple(pd['color']), tuple(pd['shadow'])
 
-        thumb = symbol_img.resize((s, s), Image.ANTIALIAS)
+        thumb = symbol_img.resize((s, s), Image.LANCZOS)
         shadow = Image.new("RGB", (s, s), shadow_color)
         y = prizes_pos[1] + idx * s
         for off_x in range(3):
