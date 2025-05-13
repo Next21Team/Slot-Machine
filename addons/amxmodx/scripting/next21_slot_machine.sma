@@ -92,7 +92,7 @@ public CBase_ObjectCaps_Pre(iEnt)
         return HAM_OVERRIDE
     }
 
-    return HAM_IGNORED
+    return GetHamReturnStatus()
 }
 
 public clcmd_slot_machine(iPlayer, iLevel, iCid)
