@@ -354,10 +354,7 @@ load_pattern()
 
     new JSON:jsonRoot = json_parse(szFilePath, true)
     if (jsonRoot == Invalid_JSON)
-    {
-        json_free(jsonRoot)
         set_fail_state("[%s] Slot machine pattern was not loaded (%s)", PLUGIN, szFilePath)
-    }
 
     g_iReelsNum = json_array_get_count(jsonRoot)
     if (g_iReelsNum < 2 || g_iReelsNum >= MAX_REELS)
@@ -393,10 +390,8 @@ load_machines()
     get_spawns_filepath(szFilePath, charsmax(szFilePath))
 
     new JSON:jsonRoot = json_parse(szFilePath, true)
-
     if (jsonRoot == Invalid_JSON)
     {
-        json_free(jsonRoot)
         log_amx("[%s] Slot machine spawns were not loaded", PLUGIN)
         return
     }
